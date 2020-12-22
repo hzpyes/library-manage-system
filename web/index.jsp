@@ -1,3 +1,6 @@
+<%@ page import="com.tlshzp.servlet.LoginServlet" %>
+<%@ page import="com.tlshzp.pojo.Acount" %>
+<%@ page import="com.tlshzp.utils.CookieUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
@@ -6,7 +9,6 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="css/login.css"/>
     <script src="js/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="js/bootstrap.min.js"></script>
     <script>
         function refreshCode() {
             //1.切换验证码
@@ -21,6 +23,11 @@
     </script>
 </head>
 <body>
+<%
+    int identify = CookieUtils.checkIdentify(request.getCookies(), session, response);
+    if (identify == 1) response.sendRedirect("user/index.jsp");
+    else if (identify == 2) response.sendRedirect("admin/index.jsp");
+%>
 <div class="login">
     <div class="content clearfix">
         <div class="content-left">
@@ -34,20 +41,14 @@
             <div class="login-form">
                 <h2>用户登录/LOGIN</h2>
                 <form action="${pageContext.request.contextPath}/loginServlet" method="post">
-                    <div class="identifire">
-                        <span>身　份：</span>
-                        <select>
-                            <option value="学生" selected="selected">学生</option>
-                            <option value="教师教辅人员">教师教辅人员</option>
-                        </select>
-                    </div>
+                    <br/>
                     <div class="account clearfix">
                         <span>账　号：</span>
-                        <input type="text" value="" />
+                        <input type="number" name="number" />
                     </div>
                     <div class="password clearfix">
                         <span>密　码：</span>
-                        <input type="text" value="" />
+                        <input type="password" name="password" />
                     </div>
                     <div class="code clearfix">
                         <span>验证码：</span>
@@ -55,40 +56,17 @@
                         <a href="javascript:refreshCode()" style="padding-left: 10px">
                             <img src="${pageContext.request.contextPath}/checkCodeServlet" title="刷新" id="vcode">
                         </a>
+                        <span style="font-size: 10px; color: red">${login_msg}</span>
                     </div>
+                    <br/>
                     <div class="btn">
-                        <input class="btn btn btn-primary" type="submit" value="登录">
-<%--                        <span id="login"><a>登录</a></span>--%>
-                        <span class="forget"><a href="password.jsp">忘记密码</a></span>
+                        <input type="submit" style="display: block;width: 110px;height: 100%;line-height: 30px;text-align: center;background: #4fadeb;font-size: 18px;color: #fff;" value="登录">
+                        <span class="forget"><a href="forgetPwd.jsp">忘记密码</a></span>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>
 </div>
-<%--<script type="text/javascript">
-    $(document).ready(function(){
-        $('#login').on('click','a',function(){
-            var aVal = $('.identifire select');
-            if (aVal.val() == '学生') {
-                $(this).attr('href','StudentIndext.jsp');
-            } else if (aVal.val() == '教师教辅人员'){
-                $(this).attr('href','TeacherIndex.jsp');
-            }
-        });
-    });
-
-
-</script>--%>
-<!--<script type="text/javascript">
-    $(document).ready(function(){
-        if (window.PIE) {
-            $('.rounded').each(function() {
-                PIE.attach(this);
-            });
-        }
-    });
-</script>-->
 </body>
 </html>
